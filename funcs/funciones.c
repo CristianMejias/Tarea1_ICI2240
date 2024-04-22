@@ -11,13 +11,14 @@
 
 /* >>>>>>>>>>>>>>>>>>>>>>> FUNCIONES SISTEMA >>>>>>>>>>>>>>>>>>>>>>> */
 
-
+// Esta función limpia la pantalla de la consola
 void limpiarPantalla()
 { 
   system("clear"); 
 }
 
 
+// Esta función espera a que el usuario presione una tecla
 void presioneTeclaParaContinuar()
 {
   AMARILLO;
@@ -27,6 +28,7 @@ void presioneTeclaParaContinuar()
 }
 
 
+// Esta función muestra el menú principal
 void mostrarMenuPrincipal()
 {
   limpiarPantalla();
@@ -45,6 +47,8 @@ void mostrarMenuPrincipal()
 }
 
 
+// Esta función muestra el submenú, 
+// recibe como parámetro un entero que indica la opción
 void mostrarSubMenu(int opcion)
 {
   VERDE;
@@ -76,12 +80,14 @@ void mostrarSubMenu(int opcion)
 }
 
 
+// Esta función limpia el buffer para leer sin complicaciones
 void limpiarBuffer()
 {
   while (getchar() != '\n');
 }
 
 
+// Esta función muestra un mensaje de error cuando falla alguna validación
 void mensajeError()
 {
   ROJO;
@@ -93,40 +99,51 @@ void mensajeError()
 /* >>>>>>>>>>>>>>>>>>>>>>> REGISTRAR PACIENTE >>>>>>>>>>>>>>>>>>>>>>> */
 
 
+// Función general que se encarga de registrar un paciente en el sistema
 void registrarPaciente(List *pacientes)
 {
+  //ESTRUCTURA QUE ALMACENA LOS DATOS DE CADA PACIENTE
   tipoPaciente *nuevoPaciente = (tipoPaciente*) malloc(sizeof(tipoPaciente));
 
+  //FUNCION QUE SE ENCARGA DE LEER LOS DATOS
   ingresarPaciente(nuevoPaciente);
   //Cambiar comentarios SOLO para hacer pruebas
   //ingresarPacienteRandom(nuevoPaciente);
 
+  //DAR FORMATO A NOMBRE PARA FUTURAS COMPARACIONES
   formatearNombre(nuevoPaciente);
 
   nuevoPaciente->prioridad = 0;
 
+  //ALMACENAR LA HORA ACTUAL EN LA ESTRUCTURA
   struct tm *temp;
   time(&nuevoPaciente->hora);
   temp = localtime(&nuevoPaciente->hora);
   temp->tm_hour = (temp->tm_hour + 20) % 24;
   nuevoPaciente->hora = mktime(temp);
 
+  //ALMACENAR PACIENTE EN LA LISTA DE PRIORIDAD BAJA
   list_pushBack(pacientes, nuevoPaciente);
 }
 
 
+// Esta función valida que una edad (cadena) sea correcta entre 1 - EDADMAXIMA
 int validarEdad()
 {
+  //DATOS TEMPORALES PARA ALMACENAR EDAD
   char edadStr[5];
   int edadNum;
 
   while (1)
   {
+    //LEER 4 CARACTERES E IGNORAR EL RESTO
     scanf("%4[^\n]s", edadStr);
     limpiarBuffer();
 
+    //COMPROBAR SI LA CADENA INGRESADA ES NUMERICA
     if (esNumerica(edadStr))
     {
+      //VALIDAR QUE EDAD ESTE EN RANGO DEFINIDO
       edadNum = cadenaNumero(edadStr);
       if (edadNum <= EDADMAXIMA && edadNum > 0)
         return edadNum;
@@ -136,10 +153,13 @@ int validarEdad()
 }
 
 
+// Esta función comprueba que una cadena sea numérica
 bool esNumerica(char *cadena)
 {
+  //RECORRER TODA LA CADENA
   while (*cadena != '\0')
   {
+    COMPROBAR QUE SOLO TENGA DIGITOS
     if (!isdigit(*cadena))
       return false;
     cadena++;
@@ -148,13 +168,16 @@ bool esNumerica(char *cadena)
 }
 
 
+// Esta función convierte una cadena en un número entero
 int cadenaNumero(char *cadena)
 {
   int numero = 0;
   int digito;
 
+  //RECORRER TODA LA CADENA
   while ((*cadena) != '\0')
   {
+    //ALGEBRA DE CADENAS PARA OBTENER LOS DIGITOS
     digito = (*cadena) - '0';
     numero = numero * 10 + digito;
     cadena++;
@@ -163,6 +186,7 @@ int cadenaNumero(char *cadena)
 }
 
 
+// Esta función convierte una cadena en minúsculas
 void aMinusculas(char *cadena, char *cadenaMod)
 {
   int i = 0;
@@ -180,6 +204,7 @@ void aMinusculas(char *cadena, char *cadenaMod)
 }
 
 
+// Esta función recibe un tipoPaciente, crea una cadena con formato de su nombre y lo almacena en la estructura
 void formatearNombre(tipoPaciente *paciente)
 {
   //problemas con tildes
@@ -187,12 +212,14 @@ void formatearNombre(tipoPaciente *paciente)
 }
 
 
+// Función temporal para pruebas de funcionamiento
 void ingresarPacienteRandom(tipoPaciente *paciente)
 {
   CYAN;
   puts(" ... Paciente Random ...");
   BLANCO;
 
+  //VECTORES NOMBRES AUXILIARES
   char nombres[20][MAXNOMBRE] = {
           "Juan\0", "Pedro\0", "Carlos\0", "Luis\0",
           "Javier\0", "Antonio\0", "Miguel\0", "Jose\0",
@@ -200,6 +227,7 @@ void ingresarPacienteRandom(tipoPaciente *paciente)
           "Laura\0", "Sofia\0", "Elena\0", "Lucia\0",
           "Isabel\0", "Paula\0", "Carmen\0", "Marta\0"};
 
+  //VECTOR SINTOMAS AUXILIARES
   char sintomas[10][MAXSINTOMA] = {
           "Congestión nasal, Tos\0",
           "Fiebre alta, Dolor de cabeza\0",
@@ -214,6 +242,7 @@ void ingresarPacienteRandom(tipoPaciente *paciente)
 
   srand(time(NULL));
 
+  //VARIABLE AUXILIAR RANDOM
   int aux;
   aux = rand() % 20;
   strcpy(paciente->nombre, nombres[aux]);
@@ -226,15 +255,19 @@ void ingresarPacienteRandom(tipoPaciente *paciente)
 }
 
 
+// Esta función lee el nombre, edad y síntomas de un paciente
 void ingresarPaciente(tipoPaciente *paciente)
 {
+  //LEER NOMBRE
   printf(" ■ Ingrese el nombre del paciente: ");
   scanf("%29[^\n]s", paciente->nombre);
   limpiarBuffer();
 
+  //LEER EDAD
   printf(" ■ Ingrese la edad del paciente: ");
   paciente->edad = validarEdad();
 
+  //LEER SINTOMAS
   printf(" ■ Ingrese los síntomas del paciente: ");
   scanf("%99[^\n]s", paciente->sintomas);
   limpiarBuffer();
@@ -243,33 +276,41 @@ void ingresarPaciente(tipoPaciente *paciente)
 
 /* >>>>>>>>>>>>>>>>>>>>>>> ASIGNAR PRIORIDAD >>>>>>>>>>>>>>>>>>>>>>> */
 
-
+// Función general que se encarga de asignar una prioridad a un paciente
 void asignarPrioridad(List *listaBaja, List *listaMedia, List *listaAlta)
 {
   int prioridad;
   char nombreBuscado[MAXNOMBRE];
   char nombreFormato[MAXNOMBRE];
 
+  //LEER NOMBRE BUSCADO
   printf(" ■ Ingrese nombre de paciente: ");
   scanf("%29[^\n]s", nombreBuscado);
   limpiarBuffer();
 
+  //DAR FORMATO PARA LA CORRECTA COMPARACION
   aMinusculas(nombreBuscado, nombreFormato);
 
   tipoPaciente *paciente = NULL;
 
+  //BUSCARLO EN LA LISTA DE PRIORIDAD BAJA
   buscarPaciente(listaBaja, &paciente, nombreFormato);
   if (paciente != NULL)
   {
+    //LEER PRIORIDAD A ASIGNAR
     puts(" ■ Ingrese prioridad");
     printf("   (Baja = 0 | Media = 1 | Alta = 2) : ");
 
+    //VALIDAR Y ASIGNAR PRIORIDAD
     prioridad = validarEnIntervalo(0,2);
     paciente->prioridad = prioridad;
+
+    //INSERTAR EN LA LISTA CORRESPONDIENTE
     insertarEnListaPrioridad(paciente, listaBaja, listaMedia, listaAlta);
   }
   else
   {
+    //MANEJO DE ERROR
     ROJO;
     printf(" × Paciente no encontrado :(\n");
     BLANCO;
@@ -278,8 +319,11 @@ void asignarPrioridad(List *listaBaja, List *listaMedia, List *listaAlta)
 }
 
 
+// Esta función inserta un paciente en una lista de prioridad específica
 void insertarEnListaPrioridad(tipoPaciente *paciente, List *listaBaja, List *listaMedia, List *listaAlta)
 {
+  //COMPROBAR PRIORIDAD Y INSERTAR A LISTA CORRESPONDIENTE
+  //ELIMINAR DE LISTA BAJA SI CORRESPONDE
   if (paciente->prioridad == BAJA)
     return;
   else if (paciente->prioridad == MEDIA)
@@ -301,11 +345,14 @@ void insertarEnListaPrioridad(tipoPaciente *paciente, List *listaBaja, List *lis
 }
 
 
+// Búsqueda lineal de un paciente en una lista
 void buscarPaciente(List *listaBaja, tipoPaciente **ptrPaciente, char *nombreBuscado)
 {
+  //PUNTERO AUXILIAR PARA RECORRER LA LISTA
   *ptrPaciente = list_first(listaBaja);
   while ((*ptrPaciente) != NULL)
   {
+    //COMPARAR NOMBRE
     if (strcmp((*ptrPaciente)->nombreMod, nombreBuscado) == 0)
       return;
     (*ptrPaciente) = list_next(listaBaja);
@@ -314,13 +361,14 @@ void buscarPaciente(List *listaBaja, tipoPaciente **ptrPaciente, char *nombreBus
 }
 
 
-
-
+// Esta función compara 2 tiempos tipo time_t
 int compararTiempos(void *dato1, void *dato2)
 {
+  //CASTING A TIPOPERSONA
   tipoPaciente *ptr1 = (tipoPaciente *) dato1;
   tipoPaciente *ptr2 = (tipoPaciente *) dato2;
-  
+
+  //COMPARACION DE TIEMPOS
   if (ptr1->hora < ptr2->hora)
     return 1;
   return 0;
@@ -329,7 +377,7 @@ int compararTiempos(void *dato1, void *dato2)
 
 /* >>>>>>>>>>>>>>>>>>>>>>> MOSTRAR LISTA DE ESPERA >>>>>>>>>>>>>>>>>>>>>>> */
 
-
+// Función general que muestra los pacientes en espera
 void mostrarPacientes(List *listaBaja, List *listaMedia , List *listaAlta)
 {
   CYAN;
@@ -349,20 +397,22 @@ void mostrarPacientes(List *listaBaja, List *listaMedia , List *listaAlta)
   puts("   ====================");
   BLANCO;
   mostrarUnaLista(listaBaja);
-
 }
 
 
+// Esta función muestra los pacientes de una lista
 void mostrarUnaLista(List *lista)
 {
   tipoPaciente *pacienteActual = list_first(lista);
 
+  //COMPROBAR QUE EXISTAN PACIENTES
   if (pacienteActual == NULL)
   {
     printf("   No hay pacientes en esta prioridad :)\n\n");
     return;
   }
 
+  //MOSTRAR CADA PACIENTE DE LA LISTA
   int i = 0;
   while (pacienteActual != NULL)
   {
@@ -375,6 +425,7 @@ void mostrarUnaLista(List *lista)
 }
 
 
+// Esta función muestra los datos de un paciente
 void mostrarUnPaciente(tipoPaciente *paciente)
 {
   printf("    ¤ Nombre: %s\n", paciente->nombre);
@@ -386,7 +437,7 @@ void mostrarUnPaciente(tipoPaciente *paciente)
 
 /* >>>>>>>>>>>>>>>>>>>>>>> ATENDER PACIENTE >>>>>>>>>>>>>>>>>>>>>>> */
 
-
+// Función general que simula la atención de un paciente con la mayor prioridad
 void atenderPaciente(List *listaBaja, List *listaMedia, List *listaAlta)
 {
   tipoPaciente *pacienteActual = list_first(listaAlta);
@@ -394,6 +445,7 @@ void atenderPaciente(List *listaBaja, List *listaMedia, List *listaAlta)
   printf("   Atendiendo al paciente de mayor prioridad\n\n");
   BLANCO;
 
+  //RECORRE CADA LISTA DESDE ALTA A BAJA
   if (pacienteActual != NULL)
   {
     printf("   Paciente en prioridad ALTA\n");
@@ -431,9 +483,10 @@ void atenderPaciente(List *listaBaja, List *listaMedia, List *listaAlta)
 
 /* >>>>>>>>>>>>>>>>>>>>>>> MOSTRAR PRIORIDAD >>>>>>>>>>>>>>>>>>>>>>> */
 
-
+// Función general que muestra la lista de espera de una prioridad específica
 void mostrarPrioridad(List *listaBaja, List *listaMedia, List *listaAlta)
 {
+  //LECTURA DE LA PRIORIDAD A MOSTRAR
   int prioridad;
   puts(" ■ Ingrese prioridad");
   printf("   (Baja = 0 | Media = 1 | Alta = 2): ");
@@ -443,6 +496,7 @@ void mostrarPrioridad(List *listaBaja, List *listaMedia, List *listaAlta)
   CYAN;
   printf("   Mostrando pacientes por prioridad: ");
 
+  //MOSTRAR LA LISTA CORRESPONDIENTE
   if (prioridad == BAJA)
   {
     printf("BAJA\n\n");
@@ -464,6 +518,7 @@ void mostrarPrioridad(List *listaBaja, List *listaMedia, List *listaAlta)
 }
 
 
+// Esta función valida que un número ingresado esté en un intervalo específico
 int validarEnIntervalo(int limiteInf, int limiteSup)
 {
   int num;
@@ -471,11 +526,14 @@ int validarEnIntervalo(int limiteInf, int limiteSup)
   
   while (true)
   {
+    LECTURA DE CADENA
     scanf("%1[^\n]s", numStr);
     limpiarBuffer();
 
+    //COMPARA SI ES UNA CADENA VALIDA
     if (strcmp(numStr,"0") == 0 || strcmp(numStr,"1") == 0 || strcmp(numStr,"2") == 0);
       num = cadenaNumero(numStr);
+    //VERIFICA QUE ESTA EN EL INTERVALO
     if (num >= limiteInf && num <= limiteSup)
       return num;
     
