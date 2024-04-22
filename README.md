@@ -1,3 +1,4 @@
+
 # Tarea 1 | Estructura de datos | ICI2240 - 1
 # Sistema de Gestión de Pacientes en Hospital
 
@@ -12,9 +13,10 @@ Dado que el sistema está diseñado para ser accesible y fácil de probar, recom
 1. Visita [Repl.it](https://repl.it/).
 2. Crea una nueva cuenta o inicia sesión si ya tienes una.
 3. Una vez en tu dashboard, selecciona "New Repl" y elige "Import from GitHub".
-4. Pega la URL del repositorio: `https://github.com/CristianMejias/Tarea1_ICI2240.git`.
+4. Pega la URL del repositorio: `https://github.com/CristianMejias/Tarea1_ICI2240.git`
 5. [Repl.it](http://repl.it/) clonará el repositorio y preparará un entorno de ejecución.
-6. Presiona el botón "Run" para compilar y ejecutar la aplicación.
+6. Presiona el botón "Done" en la opción de comandos de compilación
+7. Presiona el botón "Run" para compilar y ejecutar la aplicación.
 
 ## Funcionalidades
 
@@ -25,6 +27,7 @@ Dado que el sistema está diseñado para ser accesible y fácil de probar, recom
 - Ver la lista de espera de pacientes, ordenada por prioridad y hora de registro.
 - Atender al siguiente paciente, respetando el orden de prioridad.
 - Ver la lista de los pacientes según su prioridad.
+- Salir del sistema
 - Validaciones para evitar errores de ingreso
 
 ### Problemas conocidos:
@@ -69,13 +72,15 @@ Dado que el sistema está diseñado para ser accesible y fácil de probar, recom
 - El usuario ingresa la opcion 1
 - Se comienza registrando los nuevos pacientes que acaban de llegar al hospital.
 - Se piden 3 datos por paciente
-  - Nombre $\rightarrow$ Hasta 30 caracteres, se almacena su nombre y una cadena auxiliar con un formato especifico
+  - Nombre $\rightarrow$ Hasta 29 caracteres, se almacena su nombre y una cadena auxiliar con un formato especifico
   - Edad $\rightarrow$ Se comprueba que sea una edad valida, entre 1 y 130
-  - Síntomas $\rightarrow$ Hasta 100 caracteres
+  - Síntomas $\rightarrow$ Hasta 99 caracteres
 
 - Ejemplo 1
   ````
-  Opcion seleccionada: 1) Registrar Paciente
+  Opcion seleccionada: 1
+  Registrar Paciente
+  
   Ingrese el nombre del paciente: Juan
   Ingrese la edad del paciente : 33
   Ingrese el sintoma del paciente : Congestión nasal, Tos
@@ -85,7 +90,9 @@ Dado que el sistema está diseñado para ser accesible y fácil de probar, recom
 
 - Ejemplo 2
   ```
-  Opcion seleccionada: 1) Registrar Paciente
+  Opcion seleccionada: 1
+  Registrar Paciente
+  
   Ingrese el nombre del paciente: Marta
   Ingrese la edad del paciente : 22
   Ingrese el sintoma del paciente : Dolor de garganta, Ganglios inflamados
@@ -150,7 +157,8 @@ Dado que el sistema está diseñado para ser accesible y fácil de probar, recom
 	Opción seleccionada: 4
 	Atender al siguiente paciente
 	
-	Atendiendo al paciente con mayor prioridad...
+	Atendiendo al paciente con mayor prioridad
+	Paciente prioridad ALTA
 		¤ Nombre: Juan
 		¤ Edad: 33
 		¤ Síntomas: Congestión nasal, Tos
@@ -169,7 +177,7 @@ Dado que el sistema está diseñado para ser accesible y fácil de probar, recom
 	Mostrar pacientes por prioridad
 	
 	Ingrese la prioridad del paciente 
-	(1 = BAJA , 2 = MEDIA , 3 = ALTA): 0
+	(0 = BAJA , 1 = MEDIA , 2 = ALTA): 0
 	
 	Mostrando pacientes por prioridad:  BAJA
 	
@@ -191,4 +199,3 @@ Dado que el sistema está diseñado para ser accesible y fácil de probar, recom
 	
 	Fin del programa.
 	````
-
