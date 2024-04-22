@@ -159,7 +159,7 @@ bool esNumerica(char *cadena)
   //RECORRER TODA LA CADENA
   while (*cadena != '\0')
   {
-    COMPROBAR QUE SOLO TENGA DIGITOS
+    //COMPROBAR QUE SOLO TENGA DIGITOS
     if (!isdigit(*cadena))
       return false;
     cadena++;
@@ -526,7 +526,7 @@ int validarEnIntervalo(int limiteInf, int limiteSup)
   
   while (true)
   {
-    LECTURA DE CADENA
+    //LECTURA DE CADENA
     scanf("%1[^\n]s", numStr);
     limpiarBuffer();
 
